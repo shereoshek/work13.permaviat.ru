@@ -27,7 +27,7 @@
 		$allowedExtensions = ['.png', '.jpg', 'jpeg'];
 
 		$allowedMimeTypes = ['image/png', 'image/jpg','image/jpeg'];
-		$fileMimeType = mime_content_type($photo('tmp_name'));
+		$fileMimeType = mime_content_type($photo['tmp_name']);
 
 		if(in_array($extension, $allowedExtensions) && in_array($fileMimeType, $allowedMimeTypes)){
 			$filename = "user_{$id}{$extension}";
