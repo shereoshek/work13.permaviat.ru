@@ -14,6 +14,8 @@
 		}
  	} else header("Location: login.php");
 	
+	$user_to_query = $mysqli->query("SELECT * FROM `users` WHERE `id` = ".$_SESSION['user']);
+	$user_to_read = $user_to_query->fetch_row();
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -39,16 +41,12 @@
 		</div>
 		<div class="space"> </div>
 		<div class="main">
+			<img style="height: 100px; float: left; margin: 10px;" src="./img/<?=$user_to_read[3];?>"/>
 			<div class="content">
 				<input type="button" class="button" value="Выйти" onclick="logout()"/>
 				<div class="name" style="padding-bottom: 0px;">Личный кабинет</div>
 				<div class="description">Добро пожаловать: 
-					<?php
-						$user_to_query = $mysqli->query("SELECT * FROM `users` WHERE `id` = ".$_SESSION['user']);
-						$user_to_read = $user_to_query->fetch_row();
-						
-						echo $user_to_read[1];
-					?>
+					<?=$user_to_read[1];?>
 					<br>Ваш идентификатор:
 					<?php
 						echo $user_to_read[0];

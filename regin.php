@@ -7,8 +7,8 @@
 			
 			$user_query = $mysqli->query("SELECT * FROM `users` WHERE `id` = ".$_SESSION['user']);
 			while($user_read = $user_query->fetch_row()) {
-				if($user_read[3] == 0) header("Location: user.php");
-				else if($user_read[3] == 1) header("Location: admin.php");
+				if($user_read[4] == 0) header("Location: user.php");
+				else if($user_read[4] == 1) header("Location: admin.php");
 			}
 		}
  	}
@@ -43,6 +43,8 @@
 					<input name="_password" type="password" placeholder="" onkeypress="return PressToEnter(event)"/>
 					<div class = "sub-name">Повторите пароль:</div>
 					<input name="_passwordCopy" type="password" placeholder="" onkeypress="return PressToEnter(event)"/>
+					<div class = "sub-name">Фотография:</div>
+					<input name="photo" type="file"/>
 					
 					<a href="login.php">Вернуться</a>
 					<input type="button" class="button" value="Зайти" onclick="RegIn()" style="margin-top: 0px;"/>
@@ -65,16 +67,24 @@
 				var _login = document.getElementsByName("_login")[0].value;
 				var _password = document.getElementsByName("_password")[0].value;
 				var _passwordCopy = document.getElementsByName("_passwordCopy")[0].value;
+				var photoInput = document.querySelector('input[name="photo"]');
+				
+				var photoFile = photoInput.files[0];
+				if(photoFile == undefined) {
+					alert("Выберите файл.");
+					return;
+				}
 				
 				if(_login != "") {
 					if(_password != "") {
 						if(_password == _passwordCopy) {
 							loading.style.display = "block";
 							button.className = "button_diactive";
-							
+
 							var data = new FormData();
 							data.append("login", _login);
 							data.append("password", _password);
+							data.append("photo", photoFile);
 							
 							// AJAX запрос
 							$.ajax({
