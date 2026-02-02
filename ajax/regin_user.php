@@ -23,16 +23,25 @@
         // Сохраняем файл как user_{$id} с оригинальным расширением
         $fileInfo = pathinfo($photo['name']);
         $extension = isset($fileInfo['extension']) ? "." . $fileInfo['extension'] : "";
-        $filename = "user_{$id}{$extension}";
-        $uploadPath = "../img/{$filename}";
-        
-        // Перемещаем файл в нужную директорию
-        if(!move_uploaded_file($photo['tmp_name'], $uploadPath)) {
-            // Ошибка перемещения файла
-            error_log("Не удалось сохранить файл: " . $photo['name']);
-        }
 
-		$mysqli->query("UPDATE `users` SET `img` = '$filename' WHERE `id` = $id");
+		$allowedExtensions = ['.png', '.jpg', 'jpeg'];
+
+		$allowedMimeTypes = ['image/png', 'image/jpg','image/jpeg'];
+		$fileMimeType = mime_content_type($photo('tmp_name'));
+
+		if(in_array($extension, $allowedExtensions) && in_array($fileMimeType, $allowedMimeTypes)){
+			$filename = "user_{$id}{$extension}";
+			$uploadPath = "../img/{$filename}";
+			
+			// Перемещаем файл в нужную директорию
+			if(!move_uploaded_file($photo['tmp_name'], $uploadPath)) {
+				// Ошибка перемещения файла
+				error_log("Не удалось сохранить файл: " . $photo['name']);
+			}
+	
+			$mysqli->query("UPDATE `users` SET `img` = '$filename' WHERE `id` = $id");
+		}
+
 
 		if($id != -1) $_SESSION['user'] = $id; // запоминаем пользователя
 		echo $id;
